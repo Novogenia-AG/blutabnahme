@@ -137,9 +137,9 @@ const T = {
            'Es ist <b>vormittags</b> (7–10 Uhr), <b>Montag bis Donnerstag</b>.',
            'Ich habe einen <b>Timer</b> bereit.'],
         los:'Alles erledigt — los geht’s', ifu:'Vor Gebrauch die Gebrauchsanweisung des Geräteherstellers lesen. Nur für Erwachsene.',
-        stopp:'Stopp · Prüfen', pruefH:'Linie bei <span class="einheit">500 µL</span> erreicht?',
-        pruefP:'Röhrchen senkrecht halten und mit der oberen Linie vergleichen.',
-        ja:'Ja', jaS:'Weiter mit Beschriften', nein:'Nein', neinS:'Mit dem Finger nachfüllen',
+        stopp:'Stopp · Prüfen', pruefH:'Röhrchen bis oben voll?',
+        pruefP:'Röhrchen senkrecht halten. Ganz voll: fertig, nur noch verpacken. Nicht voll: mit dem Finger weiter.',
+        ja:'Ja, voll', jaS:'Weiter mit Verpacken', nein:'Nein', neinS:'Mit dem Finger weiter',
         fertigH:'Geschafft!', fertigP:'Danke. Bis zur Post bei Zimmertemperatur lagern — nicht auf die Heizung, nicht in die Sonne.',
         schritt:(n, N) => `Schritt ${n} von ${N}`, zurueck:'Zurück', weiter:'Weiter' },
   en: { kicker:'Blood sampling at home', h1:'Step by step.',
@@ -149,40 +149,41 @@ const T = {
            'It is <b>morning</b> (7–10 am), <b>Monday to Thursday</b>.',
            'I have a <b>timer</b> ready.'],
         los:'All done — let’s go', ifu:'Read the device manufacturer’s instructions before use. Adults only.',
-        stopp:'Stop · Check', pruefH:'Has the blood reached the <span class="einheit">500 µL</span> line?',
-        pruefP:'Hold the tube upright and compare with the upper line.',
-        ja:'Yes', jaS:'Continue with labelling', nein:'No', neinS:'Top up from the finger',
+        stopp:'Stop · Check', pruefH:'Is the tube full to the top?',
+        pruefP:'Hold the tube upright. Completely full: done, just pack it. Not full: continue with the finger.',
+        ja:'Yes, full', jaS:'Continue with packing', nein:'No', neinS:'Continue with the finger',
         fertigH:'Done!', fertigP:'Thank you. Keep at room temperature until posting — not on a radiator, not in the sun.',
         schritt:(n, N) => `Step ${n} of ${N}`, zurueck:'Back', weiter:'Next' },
 };
 
 const ST = {
-  de: { v:'Vorbereiten', s:'Schultergerät', a:'Abnehmen und prüfen', f:'Nur wenn nötig: Finger', b:'Beschriften und senden' },
-  en: { v:'Prepare', s:'Shoulder device', a:'Remove and check', f:'Only if needed: finger', b:'Label and send' },
+  de: { v:'Vorbereiten', s:'Schultergerät', a:'Abnehmen und prüfen', f:'Nur wenn nötig: Finger', b:'Verpacken und senden' },
+  en: { v:'Prepare', s:'Shoulder device', a:'Remove and check', f:'Only if needed: finger', b:'Pack and send' },
 };
-// [Nummer, Stufe, {Sprache: [Titel, Text, Badge, Hinweis]}]
+// [Nummer, Stufe, Clip, {Sprache: [Titel, Text, Badge, Hinweis]}]
+// Clip = Dateiname in videos/ und bilder/ (seit Gloria 05.11.2026 nicht mehr gleich der Nummer)
 const SCHRITTE = [
-  [1,'v',{de:['In Bewegung kommen','Mindestens 5 Minuten zügig gehen oder Treppen steigen.'],en:['Get moving','Walk briskly or climb stairs for at least 5 minutes.']}],
-  [2,'v',{de:['Arm wärmen','Wärmepad knicken, bis es milchig und warm wird. Auf den Oberarm halten, Timer stellen.','4 Min.'],en:['Warm the arm','Click the heat pad until it turns milky and warm. Hold it on the upper arm, set a timer.','4 min']}],
-  [3,'v',{de:['Stelle reinigen','Mit dem Alkoholtupfer abwischen, trocknen lassen. Erst dann die Gerätepackung öffnen.'],en:['Clean the spot','Wipe with the alcohol pad and let it dry. Only then open the device pack.']}],
-  [4,'s',{de:['Röhrchen aufstecken','Deckel ab, die offene Seite fest auf den Anschluss drücken.'],en:['Attach the tube','Cap off, push the open end firmly onto the connector.']}],
-  [5,'s',{de:['Folie abziehen','Klebefläche nicht berühren.'],en:['Peel off the film','Do not touch the adhesive.']}],
-  [6,'s',{de:['Aufkleben','Auf den Oberarm setzen und andrücken. Noch nicht auslösen.','nur 1 ×'],en:['Stick it on','Place on the upper arm and press on. Do not trigger yet.','once only']}],
-  [7,'s',{de:['Knopf drücken','Den blauen Knopf ganz hineindrücken, bis es klickt.'],en:['Press the button','Push the blue button all the way in until it clicks.']}],
-  [8,'s',{de:['Arm hängen lassen','Timer stellen. Arm ruhig hängen lassen, nicht zum Nachsehen drehen.','max. 4 Min.'],en:['Let the arm hang','Set a timer. Let the arm hang still, do not turn it to look.','max. 4 min']}],
-  [9,'a',{de:['Gerät abnehmen','Langsam vom Arm ziehen, Röhrchen nach unten.'],en:['Remove the device','Pull it slowly off the arm, tube pointing down.']}],
-  [10,'a',{de:['Verschließen','Röhrchen abschrauben. Deckel gerade aufdrücken, bis er klickt.'],en:['Close the tube','Unscrew the tube. Push the cap straight on until it clicks.']}],
+  [1,'v','s01',{de:['In Bewegung kommen','Mindestens 5 Minuten zügig gehen oder Treppen steigen.'],en:['Get moving','Walk briskly or climb stairs for at least 5 minutes.']}],
+  [2,'v','s02',{de:['Arm wärmen','Das Metallplättchen im Wärmepad knicken, wenn nötig mehrmals, bis das Pad weiß und warm wird. Auf den Oberarm halten, Timer stellen.','4 Min.'],en:['Warm the arm','Bend the metal disc in the heat pad, several times if needed, until the pad turns white and warm. Hold it on the upper arm, set a timer.','4 min']}],
+  [3,'v','s03',{de:['Stelle reinigen','Mit dem Alkoholtupfer abwischen, trocknen lassen. Erst dann die Gerätepackung öffnen.'],en:['Clean the spot','Wipe with the alcohol pad and let it dry. Only then open the device pack.']}],
+  [4,'s','s04',{de:['Röhrchen aufstecken','Deckel ab, die offene Seite fest auf den Anschluss drücken.'],en:['Attach the tube','Cap off, push the open end firmly onto the connector.']}],
+  [5,'s','s05',{de:['Folie abziehen','Klebefläche nicht berühren.'],en:['Peel off the film','Do not touch the adhesive.']}],
+  [6,'s','s06',{de:['Aufkleben','Auf den Oberarm setzen und andrücken. Noch nicht auslösen.','nur 1 ×'],en:['Stick it on','Place on the upper arm and press on. Do not trigger yet.','once only']}],
+  [7,'s','s07',{de:['Knopf drücken','Den blauen Knopf ganz hineindrücken, bis es klickt.'],en:['Press the button','Push the blue button all the way in until it clicks.']}],
+  [8,'s','s08',{de:['Arm hängen lassen','Timer stellen. Arm ruhig hängen lassen, nicht zum Nachsehen drehen.','max. 4 Min.'],en:['Let the arm hang','Set a timer. Let the arm hang still, do not turn it to look.','max. 4 min']}],
+  [9,'a','s09',{de:['Gerät abnehmen','Langsam vom Arm ziehen, Röhrchen nach unten.'],en:['Remove the device','Pull it slowly off the arm, tube pointing down.']}],
+  [10,'a','s10ab',{de:['Röhrchen abdrehen','Vorsichtig vom Gerät abdrehen, nicht abreißen, sonst verschüttest du Blut. Senkrecht halten.'],en:['Twist off the tube','Carefully twist it off the device, do not tear it off or you will spill blood. Keep it upright.']}],
+  [11,'a','s10',{de:['Verschließen','Deckel gerade aufdrücken, bis er klickt. Nicht drehen, sonst ist das Röhrchen nicht dicht.'],en:['Close the tube','Push the cap straight on until it clicks. Do not twist, or it will not be sealed.']}],
+  [12,'a','s17',{de:['Beschriften','Barcode-Aufkleber aufs Röhrchen, Datum eintragen, O (Oberarm) ankreuzen.','O'],en:['Label','Barcode sticker on the tube, write the date, tick O (upper arm).','O']}],
   'pruef',
-  [11,'f',{de:['Windmühle','Arm in großen, schnellen Kreisen schwingen, bis du das Blut in den Fingern spürst.'],en:['Windmill','Swing the arm in big, fast circles until you feel the blood in your fingers.']}],
-  [12,'f',{de:['Mittelfinger stechen','Fingerkuppe mit dem Alkoholtupfer abwischen, trocknen lassen. Kappe abdrehen, weiße Spitze ganz vorne fest andrücken, bis sie auslöst.'],en:['Prick the middle finger','Wipe the fingertip with the alcohol pad, let it dry. Twist off the cap, press the white tip firmly onto the very end until it triggers.']}],
-  [13,'f',{de:['Zweiter Stich','Neue Lanzette direkt neben den ersten Punkt. Jede Lanzette löst nur einmal aus.','2 ×'],en:['Second prick','New lancet right next to the first dot. Each lancet triggers only once.','2 ×']}],
-  [14,'f',{de:['Finger ausstreichen','Mittelfinger nach unten. Oben an der Wurzel fassen und fest zur Kuppe streichen, wie bei einer Melkbewegung. Locker lassen, wieder oben fassen.'],en:['Stroke the finger','Middle finger down. Grip at the base and stroke firmly to the tip, like a milking motion. Let go, grip at the top again.']}],
-  [15,'f',{de:['Ins Röhrchen tropfen','Nur ins zweite, leere Röhrchen. Weiter ausstreichen, das Blut tropft hinein.','500 µL','Kaum Blut? Hand unter warmes Wasser, noch einmal die Windmühle, dann weiter ausstreichen.'],
-           en:['Drip into the tube','Only into the second, empty tube. Keep stroking, the blood drips in.','500 µL','Hardly any blood? Hand under warm water, windmill again, then keep stroking.']}],
-  [16,'f',{de:['Linie erreicht','Blut bis zur oberen Linie: fertig. Finger kurz drücken, Pflaster drauf.','500 µL'],en:['Line reached','Blood up to the upper line: done. Press the finger briefly, put on a plaster.','500 µL']}],
-  [17,'b',{de:['Beschriften','Barcode-Aufkleber aufs Röhrchen, Datum eintragen, O (Oberarm) oder K (Finger) ankreuzen.'],en:['Label','Barcode sticker on the tube, write the date, tick O (upper arm) or K (finger).']}],
-  [18,'b',{de:['In den Beutel','Röhrchen in den Rücksendebeutel, nach Fingerabnahme beide. Verschließen, Begleitschein ausfüllen.'],en:['Into the bag','Tube into the return bag, both tubes after a finger top-up. Seal it, fill in the sample form.']}],
-  [19,'b',{de:['Absenden','Mit dem Begleitschein ins Rücksendekuvert, noch am selben Tag zur Post.'],en:['Send','Put it in the return envelope with the form, post it the same day.']}],
+  [13,'f','s11',{de:['Windmühle','Arm in großen, schnellen Kreisen schwingen, bis du das Blut in den Fingern spürst.'],en:['Windmill','Swing the arm in big, fast circles until you feel the blood in your fingers.']}],
+  [14,'f','s12',{de:['Mittelfinger stechen','Fingerkuppe mit dem Alkoholtupfer abwischen, trocknen lassen. Kappe abdrehen, weiße Spitze ganz vorne fest andrücken, bis sie auslöst.'],en:['Prick the middle finger','Wipe the fingertip with the alcohol pad, let it dry. Twist off the cap, press the white tip firmly onto the very end until it triggers.']}],
+  [15,'f','s13',{de:['Zweiter Stich','Neue Lanzette direkt neben den ersten Punkt. Jede Lanzette löst nur einmal aus.','2 ×'],en:['Second prick','New lancet right next to the first dot. Each lancet triggers only once.','2 ×']}],
+  [16,'f','s14',{de:['Finger ausstreichen','Mittelfinger nach unten. Oben an der Wurzel fassen und fest zur Kuppe streichen, wie bei einer Melkbewegung. Locker lassen, wieder oben fassen.'],en:['Stroke the finger','Middle finger down. Grip at the base and stroke firmly to the tip, like a milking motion. Let go, grip at the top again.']}],
+  [17,'f','s15',{de:['Bis oben füllen','Nur ins zweite, leere Röhrchen. Weiter ausstreichen, bis das Röhrchen ganz voll ist. Nicht bei der Linie aufhören.','ganz voll','Kaum Blut? Hand unter warmes Wasser, noch einmal die Windmühle, dann weiter ausstreichen.'],
+           en:['Fill to the top','Only into the second, empty tube. Keep stroking until the tube is completely full. Do not stop at the line.','full','Hardly any blood? Hand under warm water, windmill again, then keep stroking.']}],
+  [18,'f','s17k',{de:['Verschließen und beschriften','Finger kurz drücken, Pflaster drauf. Deckel aufdrücken, bis er klickt. Aufkleber drauf, Datum, K (Finger) ankreuzen.','K'],en:['Close and label','Press the finger briefly, put on a plaster. Push the cap on until it clicks. Sticker on, date, tick K (finger).','K']}],
+  [19,'b','s18',{de:['Verpacken und absenden','Röhrchen in den Rücksendebeutel, nach Fingerabnahme beide. Verschließen, mit dem Begleitschein ins Kuvert, noch am selben Tag zur Post.'],en:['Pack and send','Tube into the return bag, both tubes after a finger top-up. Seal it, put it into the envelope with the form, post it the same day.']}],
 ];
 
 const pad = n => String(n).padStart(2, '0');
@@ -209,8 +210,8 @@ function bau() {
   document.getElementById('runter').setAttribute('aria-label', t.weiter);
   const S = [{ typ:'start' }, ...SCHRITTE.map(x => {
     if (x === 'pruef') return { typ:'pruef' };
-    const [nr, stu, tx] = x, [ti, p, b, h] = tx[L];
-    return { typ:'schritt', nr, stufe: st[stu], t: ti, p, b, h };
+    const [nr, stu, clip, tx] = x, [ti, p, b, h] = tx[L];
+    return { typ:'schritt', nr, clip, stufe: st[stu], t: ti, p, b, h };
   }), { typ:'fertig' }];
   const N = S.filter(s => s.typ === 'schritt').length;
   feed.innerHTML = S.map((s, k) => {
@@ -226,17 +227,16 @@ function bau() {
         <div class="oben" style="position:absolute">${fort}</div>
         <span class="stopp">${t.stopp}</span><h1>${t.pruefH}</h1><p class="lead">${t.pruefP}</p>
         <div class="wahl">
-          <button class="ja" data-ziel="17"><img src="bilder/pruef_ja.jpg" alt=""><b>${t.ja}</b><span>${t.jaS}</span></button>
-          <button class="nein" data-ziel="11"><img src="bilder/pruef_nein.jpg" alt=""><b>${t.nein}</b><span>${t.neinS}</span></button>
+          <button class="ja" data-ziel="19"><img src="bilder/pruef_ja.jpg" alt=""><b>${t.ja}</b><span>${t.jaS}</span></button>
+          <button class="nein" data-ziel="13"><img src="bilder/pruef_nein.jpg" alt=""><b>${t.nein}</b><span>${t.neinS}</span></button>
         </div></div></section>`;
     if (s.typ === 'fertig') return `<section class="slide"><div class="karte" style="align-items:center;text-align:center">
         <div class="haken"><svg viewBox="0 0 24 24"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg></div>
         <h1>${t.fertigH}</h1><p class="lead">${t.fertigP}</p>
         <p class="klein">Novogenia GmbH · Strass 19, 5301 Eugendorf · service@novogenia.com</p></div></section>`;
-    const n = pad(s.nr);
     // Diese Clips beginnen mit einem eigenen Startbild
-    const bild = [2, 7, 11, 12, 16].includes(s.nr) ? `bilder/s${n}start.jpg` : `bilder/s${n}.jpg`;
-    return `<section class="slide" data-video="videos/s${n}.mp4">
+    const bild = ['s02', 's07', 's11', 's12', 's16'].includes(s.clip) ? `bilder/${s.clip}start.jpg` : `bilder/${s.clip}.jpg`;
+    return `<section class="slide" data-video="videos/${s.clip}.mp4">
         <div class="unschaerfe" style="background-image:url(${bild})"></div>
         <div class="buehne"><img src="${bild}" alt=""><video muted loop playsinline preload="none"></video></div>
         <div class="oben">${fort}<div class="kennung"><span class="nr">${s.nr}</span>
